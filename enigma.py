@@ -1,17 +1,34 @@
-"""Works - inverting rotors is a pain in the ass
+"""
+Works - inverting rotors is a pain in the ass
 	v1.1
 		Changed wireboard storage format - single line now
 		Removed Enigma.settrawgen() - redundant
-		TODO: Find a way to eliminate the no-self-encryption property
-			Increasing depth with more machines does not work
-			Can this even be done without introducing asymmetry or 
-				compromising the strength?
-			Static self-reflection maybe
-			Rotating reflector maybe
-	
+
 	v1.2
-		Made it possible to initialize multiple machines and encrypt 
-			multiple messages in a single run"""
+		Made it possible to initialize multiple machines and encrypt
+			multiple messages in a single run
+"""
+
+"""
+TODO:
+	Make the code more readable
+		Make variables more descriptive
+		Make function comments more descriptive
+		Remove the pile of elifs in the main loop
+		Use dictionaries instead of hardcoding command inputs
+		Use newlines to separate chunks of code
+
+	Allow encryption chaining
+		ie turn the settings rollback into a command instead of doing it after
+			every encryption
+
+	Find a way to eliminate the no-self-encryption property
+		Increasing depth with more machines does not work
+		Can this even be done without introducing asymmetry or
+			compromising the strength?
+		Static self-reflection maybe
+		Rotating reflector maybe
+"""
 
 import msvcrt as m
 import os
@@ -56,7 +73,7 @@ def rand(rate=3.999999,xin=420):
 
 class Enigma():
 	"""The Enigma machine"""
-	
+
 	def __init__(self):
 		self.settfile=self.sett_read()
 		self.settraw=self.settfile.split('\n')
@@ -68,7 +85,7 @@ class Enigma():
 		self.reflector=self.reflectorgen()
 		self.wb=self.wbgen()
 		self.invrotordic=self.rotorinv()
-			
+
 
 	def sett_read(self):
 		prompt="Gib settings file name w extension\nd for default\n"
@@ -79,7 +96,7 @@ class Enigma():
 			fname="estest.txt"
 		settfile=readfile(fname)
 		return settfile
-	
+
 	def validgen(self):
 		"""Generates legal character string"""
 		list1=self.settraw[0]+'\n'
@@ -96,7 +113,7 @@ class Enigma():
 			else:
 				list2+=char
 		return list2
-	
+
 	def rotortotgen(self):
 		"""Reads the total number of rotors"""
 		try:
@@ -136,7 +153,7 @@ class Enigma():
 					k+=1
 			j+=1
 		return rotor
-	
+
 	def rotordicgen(self):
 		"""Generates rotordic"""
 		rotordic={}
@@ -145,7 +162,7 @@ class Enigma():
 			rotordic[i]=self.rotorgen(i)
 			i+=1
 		return rotordic
-	
+
 	def rotorposgen(self):
 		"""Generates initial rotor positions"""
 		i=0
@@ -163,7 +180,7 @@ class Enigma():
 				rotorpos.append(0)
 			i+=1
 		return rotorpos
-	
+
 	def rotorupdate(self,pos):
 		"""Increments rotor position"""
 		# Starts from furthest rotor, on full revolution calls itself to increment the closest lower value rotor
@@ -171,7 +188,7 @@ class Enigma():
 		if self.rotorpos[pos]==0:
 			if pos!=0:
 				self.rotorupdate(pos-1)
-	
+
 	def rotorinv(self):
 		"""Inverts encryption rotors"""
 		invrotordic={}
@@ -180,7 +197,7 @@ class Enigma():
 			for val in rotor:
 				invrotordic[rotorno][rotor[val]]=val
 		return invrotordic
-	
+
 	def reflectorgen(self):
 		"""Generates reflector dictionary"""
 		reflector={}
@@ -189,7 +206,7 @@ class Enigma():
 			reflector[i]=self.validlen-1-i
 			i+=1
 		return reflector
-	
+
 	def wbgen(self):
 		"""Generates wireboard"""
 		wb={}
@@ -233,7 +250,7 @@ class Enigma():
 
 class EncData():
 	"""Encryption data"""
-	
+
 	def __init__(self,enigma):
 		self.enigma=enigma
 		self.msgplain=self.msg_read()
@@ -301,7 +318,7 @@ class EncData():
 			self.enigma.rotorupdate(self.enigma.rotortot-1)
 			out.append(char)
 		return out
-	
+
 	def write(self):
 		"""Asks for output file and writes out encrypted text"""
 		prompt="Gib output file name w extension\n"
