@@ -1,4 +1,4 @@
-# enigma
+# Enigma
 
 This is an emulation of the Enigma encryption machine used by WW2 Germany. Not historically accurate.
 
